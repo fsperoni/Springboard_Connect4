@@ -87,13 +87,14 @@ function placeInTable(y, x) {
 
 function endGame(msg) {
   // TODO: pop up alert message
-  alert(msg)
+  const top = document.getElementById('column-top')
+  top.removeEventListener("click", handleClick);
+  setTimeout(function(){ alert(msg) }, 700);
 }
 
 /** handleClick: handle click of column top to play piece */
 
 function handleClick(evt) {
-  const top = document.getElementById('column-top')
 
   // get x from ID of clicked cell
   const x = +evt.target.id 
@@ -108,17 +109,11 @@ function handleClick(evt) {
   placeInTable(y, x);
 
   // check for win
-  if (checkForWin()) {
-    top.removeEventListener("click", handleClick);
-    return endGame(`Player ${currPlayer} won!`);
-  }
+  if (checkForWin()) return endGame(`Player ${currPlayer} won!`)
 
   // check for tie
   // TODO: check if all cells in board are filled; if so call, call endGame
-  if (checkForTie()) {
-    top.removeEventListener("click", handleClick);
-    return endGame(`Game tied!`);
-  }
+  if (checkForTie()) return endGame(`Game tied!`)
 
   // switch players
   // TODO: switch currPlayer 1 <-> 2
@@ -147,13 +142,14 @@ function checkForWin() {
   /* Iterates through each piece of the board to check for a winner. For each
      piece, the code will check if there's a win horizontally to the right, 
      vertically to the bottom, and diagonally to the bottom right and bottom left*/
+  
   for (let y = 0; y < HEIGHT; y++) {
     for (let x = 0; x < WIDTH; x++) {
       const horiz = [[y, x], [y, x + 1], [y, x + 2], [y, x + 3]];
       const vert = [[y, x], [y + 1, x], [y + 2, x], [y + 3, x]];
       const diagDR = [[y, x], [y + 1, x + 1], [y + 2, x + 2], [y + 3, x + 3]];
       const diagDL = [[y, x], [y + 1, x - 1], [y + 2, x - 2], [y + 3, x - 3]];
-
+  
       if (win(horiz) || win(vert) || win(diagDR) || win(diagDL)) {
         return true;
       }
@@ -161,8 +157,9 @@ function checkForWin() {
   }
 }
 
+
 function checkForTie() {
-  return board.every(row => row.every(piece => piece))
+  return board[0].every(piece => piece)
 }
 
 function startGame() {
